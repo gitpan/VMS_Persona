@@ -14,7 +14,7 @@ require AutoLoader;
 # Do not simply export all your public functions/methods/constants.
 @EXPORT = qw();
 @EXPORT_OK = qw(&new_persona &assume_persona &drop_persona &delete_persona);
-$VERSION = '1.00';
+$VERSION = '1.01';
 
 
 bootstrap VMS::Persona $VERSION;
@@ -86,6 +86,26 @@ just won't work on earlier versions of VMS.
 The docs for the persona services in the VMS 6.2 and 7.1 docs are a
 touch... skimpy. There's no better interpretation here, since I don't have
 one.
+
+=head1 ERRORS
+
+The persona services can croak() with some errors. This is a list of them.
+
+=over 4
+
+=item Odd number of items passed
+
+This error is thrown if C<new_persona()> is called with an odd number of
+parameters.
+
+=item Invalid parameter passed
+
+Thrown if a bogus name (on the left side of a =>) parameter is passed.
+
+=back
+
+If a VMS error has occured, the functions will return undef, and fill in
+$^E with the error code.
 
 =head1 AUTHOR
 

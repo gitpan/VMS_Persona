@@ -53,11 +53,16 @@ print VMS::Persona::drop_persona() ? "ok 7\n" : "not ok 7 #$^E\n";
 # Lets reassume it
 print VMS::Persona::assume_persona(PERSONA => $PersonaOne, ASSUME_JOB_WIDE => yes, ASSUME_ACCOUNT => yes, ASSUME_SECURITY => yes) ? "ok 8\n" : "not ok 8 #$^E\n";
 
+# Drop it again. Persona one might not have privs to create a new persona,
+# so we'd best drop back to our base persona, which has to to get anywhere
+# in these tests.
+VMS::Persona::drop_persona();
+
 # Try creating a second persona
 $PersonaTwo = VMS::Persona::new_persona(NAME => $Username_Two);
 print defined($PersonaOne) ? "ok 9 # $PersonaTwo\n" : "not ok 9\n";
 
-#Assume the second persona
+# Assume the second persona
 print VMS::Persona::assume_persona(PERSONA => $PersonaTwo, ASSUME_JOB_WIDE => yes, ASSUME_ACCOUNT => yes, ASSUME_SECURITY => yes) ? "ok 10\n" : "not ok 10 #$^E\n";
 
 # What does DCL think? get the name and trim trailing blanks
@@ -69,3 +74,6 @@ if ($Username_Two eq $DCLUsername) {
 } else {
   print "not ok 11 # us +$Username_Two+ DCL +$DCLUsername+\n";
 }
+
+# Drop it again, so we're back where we started
+VMS::Persona::drop_persona();
